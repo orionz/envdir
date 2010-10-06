@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require File.dirname(__FILE__) + "/../lib/json2env"
+
+
+options = { :io => STDIN }
+
+ARGV.unshift "-h" if ARGV.size == 0
+
+optparse = OptionParser.new do|opts|
+  opts.banner = <<banner
+Usage: json2env [-f json.file] envdir
+banner
+  opts.on( '-f', '--file FILE', 'Specify a json file, default is stdin' ) do |file|
+    if (File.exists?(file))
+      options[:io] = File.open(file, "r")
+    end
+  end
+  opts.on( '-h', '--help', 'Display this screen' ) do
+    puts opts
+    exit
+  end
+end
+
+optparse.parse!
+
+envdir = ARGV.shift 
+json = options[:io].read
+
+begin 
+  JSON2Env.new(json,envdir).create;
+rescue JSON::ParserError
+  puts "Invalid JSON format"
+  exit 1
+rescue JSON2Env::TargetNotADirectory
+  puts "Cannot make envdir - file #{envdir} in the way"
+  exit 2
+rescue JSON2Env::TargetHasSubdirs 
+  puts "Cowardly refusing to delete the target dir - it has subdirs"
+  exit 3
+end
+

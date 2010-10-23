@@ -7,7 +7,6 @@ Jeweler::Tasks.new do |s|
 	s.author = "Orion Henry"
 	s.email = "orion@heroku.com"
 	s.homepage = "http://github.com/orionz/json2env"
-	s.rubyforge_project = "json2env"
 	s.files = FileList["[A-Z]*", "{bin,default,lib,spec}/**/*"]
 	s.executables = %w(json2env)
 	s.add_dependency "json"

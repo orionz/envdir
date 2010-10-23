@@ -18,8 +18,10 @@ class JSON2Env
     end
     Dir.mkdir(dir)
     @env.each do |key, value| 
-      File.open("#{dir}/#{key}", "w") do |file|
-        file.write(value.gsub(/\r\n|\r|\n/, "\0"))
+      if value
+        File.open("#{dir}/#{key}", "w") do |file|
+          file.write(value.gsub(/\r\n|\r|\n/, "\0"))
+        end
       end
     end
   end
